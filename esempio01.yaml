@@ -1,0 +1,49 @@
+esphome:
+  name: esempioesphome
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+web_server:
+  port: 80
+  
+
+wifi:
+  ssid: "Mariolinux2.4Ghz"
+  password: "Andromeda$1959"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Myvirtualbutton Fallback Hotspot"
+    password: "n9r1YbI3CMhe"
+
+captive_portal:
+
+
+
+switch:
+  - platform: template
+    name: "Faretti Salagiochi"
+    icon: "mdi:wall-sconce-flat"
+    optimistic: true
+    id: fakebutton
+    turn_on_action:
+    - switch.turn_on: relay
+    turn_off_action:
+    - switch.turn_off: relay
+  
+  - platform: gpio
+    id: relay
+    pin: GPIO12
