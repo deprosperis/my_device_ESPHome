@@ -1,5 +1,5 @@
 esphome:
-  name: esempioesphome
+  name: tastovirtualescrivania
 
 esp32:
   board: nodemcu-32s
@@ -32,7 +32,7 @@ captive_portal:
 
 switch:
   - platform: template
-    name: "Faretti Salagiochi"
+    name: "Faretto parete"
     icon: "mdi:wall-sconce-flat"
     optimistic: true
     id: fakebutton
