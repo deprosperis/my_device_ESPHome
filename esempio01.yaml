@@ -20,14 +20,18 @@ web_server:
   port: 80
   
 
+# It is highly recommended to use secrets
 wifi:
-  ssid: "xxxxxx"
-  password: "xxxxxx"
+  ssid: !secret ssid
+  password: !secret password
+
+
+
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Myvirtualbutton Fallback Hotspot"
-    password: "n9r1YbI3CMhe"
+    password: !secret password
 
 captive_portal:
 
