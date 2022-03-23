@@ -11,10 +11,10 @@ logger:
 
 # Enable Home Assistant API
 api:
-  password: ""
+  password: !secret api_password
 
 ota:
-  password: ""
+  password: !secret ota_password
 
 web_server:
   port: 80
