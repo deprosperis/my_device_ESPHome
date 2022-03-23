@@ -21,8 +21,8 @@ web_server:
   
 
 wifi:
-  ssid: "Mariolinux2.4Ghz"
-  password: "Andromeda$1959"
+  ssid: "xxxxxx"
+  password: "xxxxxx"
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
