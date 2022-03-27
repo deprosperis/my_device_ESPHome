@@ -9,6 +9,11 @@ esp32:
 # Enable logging
 logger:
 
+web_server:
+  port: 80
+  auth:
+    username: !secret web_server_username
+    password: !secret web_server_password
 
 # Enable Home Assistant API
 api:
@@ -16,14 +21,13 @@ api:
 
 ota:
   password: !secret ota_password
-
-web_server:
-  port: 80
   
+
 # It is highly recommended to use secrets
 wifi:
   ssid:     !secret wifi_ssid
   password: !secret wifi_password
+  fast_connect: true
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: !secret ap_ssid
@@ -31,17 +35,24 @@ wifi:
 
 captive_portal:
 
+time:
+  - platform: sntp
+    id: my_time
+    timezone: Europe/Rome
 
-# Example configuration entry
+binary_sensor:
+  - platform: status
+    name: EspHome Node Status
+
 mqtt:
   broker:   !secret mqtt_broker
   username: !secret mqtt_username
   password: !secret mqtt_password
-
-
-
+  discovery: true
 
 switch:
+  - platform: restart
+    name: EspHome Node Restart
   - platform: template
     name: "Faretto parete"
     icon: "mdi:wall-sconce-flat"
@@ -57,4 +68,16 @@ switch:
     pin: GPIO12
 
 
-    
+text_sensor:
+  - platform: version
+    name: EspHome Node Version
+    hide_timestamp: true    
+  - platform: wifi_info
+    ip_address:
+      name: EspHome Node IP Address      
+
+
+sensor:
+  - platform: wifi_signal
+    name: Wi-Fi Signal
+    update_interval: 30s       
