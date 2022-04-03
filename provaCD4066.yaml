@@ -1,0 +1,101 @@
+esphome:
+  name: diffusore_mini
+  platform: ESP8266
+  board: d1_mini
+
+substitutions:
+  hostname: 'Diffusore Mini:'
+  
+wifi:
+  ssid: "xxxxxxxxxx"
+  password: "xxxxxxxxx"
+
+api:
+
+web_server:
+  port: 80
+
+logger:
+
+ota:
+
+#==========================================================
+# from here all sensors and devices mapped for this Module
+#==========================================================
+
+binary_sensor:
+  - platform: status
+    name: $hostname Status
+
+switch:
+  - platform: gpio
+    pin: D5
+    id: output1
+  - platform: gpio
+    pin: D6
+    id: output2
+  - platform: template
+    name: $hostname Light
+    icon: "mdi:lightbulb"
+    turn_on_action:
+    - switch.turn_on: output2
+    - delay: 300ms
+    - switch.turn_off: output2
+  - platform: template
+    name: $hostname Mist
+    icon: "mdi:weather-fog"
+    turn_on_action:
+    - switch.turn_on: output1
+    - delay: 300ms
+    - switch.turn_off: output1
+  - platform: restart
+    name: $hostname Restart
+    
+sensor:
+  - platform: wifi_signal
+#    name: $hostname WiFi Signal
+    id: rssi_value
+    update_interval: 60s
+  - platform: uptime
+    name: $hostname Uptime
+    id: uptime_s
+    update_interval: 15s
+  - platform: template
+    name: $hostname WiFi
+    lambda: |-
+      return id(rssi_value).state * 2 + 200.0;
+    icon: mdi:wifi
+    unit_of_measurement: '%'
+    update_interval: 60s
+    
+text_sensor:
+  - platform: version
+    name: $hostname ESPHome Version
+  - platform: wifi_info
+    ssid:
+      name: $hostname WiFi SSID   
+  - platform: template
+    name: $hostname Uptime (formatted)
+    lambda: |-
+      uint32_t dur = id(uptime_s).state;
+      int dys = 0;
+      int hrs = 0;
+      int mnts = 0;
+      if (dur > 86399) {
+        dys = trunc(dur / 86400);
+        dur = dur - (dys * 86400);
+      }
+      if (dur > 3599) {
+        hrs = trunc(dur / 3600);
+        dur = dur - (hrs * 3600);
+      }
+      if (dur > 59) {
+        mnts = trunc(dur / 60);
+        dur = dur - (mnts * 60);
+      }
+      char buffer[17];
+      sprintf(buffer, "%ud %02uh %02um %02us", dys, hrs, mnts, dur);
+      return {buffer};
+    icon: mdi:clock-start
+    update_interval: 15s
+    

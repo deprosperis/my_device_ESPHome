@@ -1,0 +1,92 @@
+esphome:
+  name: rgb_tv
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "xxx"
+  password: "xxxxxxxxx"
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+web_server:
+  port: 80
+  
+sensor:
+  - platform: wifi_signal
+    name: "rgb_tv WiFi Signal"
+    update_interval: 60s 
+    
+  - platform: uptime
+    name: "rgb_tv Uptime"
+    
+text_sensor:
+  - platform: version
+    name: "rgb_tv ESPHome Version"    
+    
+switch:      
+  - platform: restart
+    name: "rgb_tv restart" 
+    
+output:
+  - platform: esp8266_pwm
+    pin: GPIO5
+    frequency: 1000 Hz
+    id: 'color_red'
+  - platform: esp8266_pwm
+    pin: GPIO13
+    frequency: 1000 Hz
+    id: 'color_green'
+  - platform: esp8266_pwm
+    pin: GPIO12
+    frequency: 1000 Hz
+    id: 'color_blue'
+
+light:
+  - platform: rgb
+    name: "RGB TV"
+    red: color_red
+    green: color_green
+    blue: color_blue
+    effects:
+      - random:
+      - random:
+          name: "Random lento"
+          transition_length: 30s
+          update_interval: 30s
+      - random:
+          name: "Random veloce"
+          transition_length: 4s
+          update_interval: 5s
+      - random:
+          name: "Random con valori personalizzati"
+          transition_length: 5s
+          update_interval: 7s
+      - strobe:
+          name: "Strobe con valori personalizzati "
+          colors:
+            - state: True
+              brightness: 100%
+              red: 100%
+              green: 90%
+              blue: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+            - state: True
+              brightness: 100%
+              red: 0%
+              green: 100%
+              blue: 0%
+              duration: 500ms
+      - flicker:
+          name: "Flicker con valori personalizzati "
+          alpha: 95%
+          intensity: 1.5% 
+          

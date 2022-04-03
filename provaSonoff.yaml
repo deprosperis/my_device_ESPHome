@@ -1,0 +1,85 @@
+esphome:
+  name: sonoff_faretti_salagiochi
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "Nome_wifi"
+  password: "password_wifi"
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  reboot_timeout: 0s
+  password: password_api
+
+ota:
+  password: password_ota
+
+web_server:
+  port: 80
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "Sonoff12 Pulsante"
+    on_press:
+      - switch.toggle: fakebutton
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "GPIO14 Faretti Salagiochi"
+    on_press:
+      - switch.toggle: fakebutton
+    on_release:
+      - switch.toggle: fakebutton
+
+switch:
+  - platform: template
+    name: "Faretti Salagiochi"
+    icon: "mdi:wall-sconce-flat"
+    optimistic: true
+    id: fakebutton
+    turn_on_action:
+    - switch.turn_on: relay
+    - light.turn_on: led
+    turn_off_action:
+    - switch.turn_off: relay
+    - light.turn_off: led
+
+  - platform: gpio
+    id: relay
+    pin: GPIO12
+
+output:
+  - platform: esp8266_pwm
+    id: basic_green_led
+    pin:
+      number: GPIO13
+      inverted: True
+
+light:
+  - platform: monochromatic
+    name: "Sonoff12 Green LED"
+    output: basic_green_led
+    id: led
+
+sensor:
+  - platform: wifi_signal
+    name: "Sonoff12 WiFi"
+    update_interval: 60s
+  - platform: uptime
+    name: "Sonoff12 Uptime"
+
+text_sensor:
+  - platform: version
+    name: "Sonoff12 ESPHome Version"
+    
